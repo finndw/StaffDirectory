@@ -1,0 +1,57 @@
+[
+  {
+    "staffId": 1,
+    "staffName": "John Smith",
+    "phoneNo": "02 9988 2211",
+    "department": 1,
+    "street": "1 Code Lane",
+    "city": "Javaville",
+    "state": "NSW",
+    "zip": "0100",
+    "country": "Australia"
+  },
+  {
+    "staffId": 2,
+    "staffName": "Sue White",
+    "phoneNo": "03 8899 2255",
+    "department": 2,
+    "street": "16 Bit Way",
+    "city": "Byte Cove",
+    "state": "QLD",
+    "zip": "1101",
+    "country": "Australia"
+  },
+  {
+    "staffId": 3,
+    "staffName": "Bob O'Bits",
+    "phoneNo": "05 7788 2255",
+    "department": 3,
+    "street": "8 Silicon Road",
+    "city": "Cloud Hills",
+    "state": "VIC",
+    "zip": "1001",
+    "country": "Australia"
+  },
+  {
+    "staffId": 4,
+    "staffName": "Mary Blue",
+    "phoneNo": "06 4455 9988",
+    "department": 2,
+    "street": "4 Processor Boulevard",
+    "city": "Appletson",
+    "state": "NT",
+    "zip": "1010",
+    "country": "Australia"
+  },
+  {
+    "staffId": 5,
+    "staffName": "Mick Green",
+    "phoneNo": "02 9988 1122",
+    "department": 3,
+    "street": "700 Bandwidth Street",
+    "city": "Bufferland",
+    "state": "NSW",
+    "zip": "0110",
+    "country": "Australia"
+  }
+]
