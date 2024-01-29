@@ -1,4 +1,4 @@
-﻿1,John Smith,02 9988 2211,1,1 Code Lane,Javaville,NSW,0100
+1,John Smith,02 9988 2211,1,1 Code Lane,Javaville,NSW,0100
 2,Sue White,03 8899 2255,2,16 Bit Way,Byte Cove,QLD,1101
 3,Bob O'Bits,05 7788 2255,3,8 Silicon Road,Cloud Hills,VIC,1001
 4,Mary Blue,06 4455 9988,2,4 Processor Boulevard,Appletson,NT,1010

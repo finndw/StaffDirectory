@@ -1,9 +1,10 @@
 import * as React from 'react';
+import * as FileSystem from 'expo-file-system';
+import { StorageAccessFramework } from 'expo-file-system';
 import { View, Text, TextInput, StyleSheet, TouchableHighlight, Image, ScrollView, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ROIData from './ROIData.json';
-// import { TextInput } from 'react-native-gesture-handler';
 
 function HomeScreen({ navigation }) {
     return (
@@ -115,10 +116,16 @@ function NewUserScreen({ route, navigation }) {
                     placeholder="{text}"
                 />
             </ScrollView>
-        <Button
-            onPress={}
-            title="Save user"
-        />
+            <View style={{ padding: 20, zIndex: 100, bottom: 20, right: 20, position: 'absolute' }}>
+                <TouchableHighlight
+                style={styles.altButton}
+                underlayColor="#595959"
+                activeOpacity={1}
+                onPress={() => SaveUser()}
+                >
+                    <Text style={styles.buttonText}>Save user</Text>
+                </TouchableHighlight>
+            </View>
         </View>
     )
 }
@@ -133,6 +140,26 @@ function HeaderImage() {
             <Text>ROI Staff Directory</Text>
         </View>
     )
+}
+
+async function SaveUser() {
+    var directoryUri = StorageAccessFramework.getUriForDirectoryInRoot()
+    var testFileUri
+    console.log(directoryUri)
+    var fileContents = '{\n"staffId": 5,\n"staffName": "Mick Green",\n"phoneNo": "02 9988 1122",\n"department": 3,\n"street": "700 Bandwidth Street",\n"city": "Bufferland",\n"state": "NSW",\n"zip": "0110",\n"country": "Australia"\n}'
+
+    const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync(directoryUri);
+
+    if (permissions.granted) {
+        let directoryUri = permissions.directoryUri
+
+        await StorageAccessFramework.createFileAsync(directoryUri, "test", "text/plain").then(async(fileUri) => {
+            await FileSystem.writeAsStringAsync(fileUri, 'hello son hows it goign');
+            testFileUri = fileUri
+        })
+        console.log(testFileUri)  
+        console.log(await FileSystem.readAsStringAsync(testFileUri))
+    }
 }
 
 const styles = StyleSheet.create({
@@ -159,7 +186,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#c64c38',
         fontSize: 25,
         padding: 10
-    }
+    },
+    altButton: {
+        backgroundColor: '#262626',
+        marginBottom: 20,
+        paddingVertical: 16,
+        paddingHorizontal: 40
+      }
   });
 
 const Stack = createNativeStackNavigator();
