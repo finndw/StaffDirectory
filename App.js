@@ -1,14 +1,37 @@
 import * as React from 'react';
 import * as FileSystem from 'expo-file-system';
 import { StorageAccessFramework } from 'expo-file-system';
-import { View, Text, TextInput, StyleSheet, TouchableHighlight, Image, ScrollView, Button } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableHighlight, Image, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ROIData from './ROIData.json';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 function HomeScreen({ navigation }) {
     return (
+        <View>
+            <View>
+                <TouchableHighlight
+                    style={styles.button}
+                    underlayColor="#c64c38"
+                    onPress={() => {navigation.navigate('Directory')}}>
+                    <Text>Directory</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                    style={styles.button}
+                    underlayColor="#c64c38"
+                    onPress={() => {StoreData()}}>
+                    <Text>Directory</Text>
+                </TouchableHighlight>
+            </View>
+        </View>
+    )
+}
 
+function DirectoryScreen({ navigation }) {
+    return (
+        
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
             <ScrollView>
                 {ROIData.map(staff => (
@@ -43,6 +66,16 @@ function HomeScreen({ navigation }) {
                 </TouchableHighlight>
 
             </ScrollView>
+            <View style={{ padding: 20, zIndex: 100, bottom: 20, left: 20, position: 'absolute' }}>
+                <TouchableHighlight
+                style={styles.altButton}
+                underlayColor="#595959"
+                activeOpacity={1}
+                onPress={() => {CheckJSON()}}
+                >
+                    <Text style={styles.buttonText}>Hoam</Text>
+                </TouchableHighlight>
+            </View>
         </View>
 
     );
@@ -65,6 +98,8 @@ function DetailsScreen({ route, navigation }) {
 }
 
 function NewUserScreen({ route, navigation }) {
+    console.log("New User")
+    var newStaff = {staffId:null, staffName:null, phoneNo:null, department:null, street:null, state:null, zip:null, country:null}
     return (
         <View>
             <ScrollView>
@@ -72,48 +107,56 @@ function NewUserScreen({ route, navigation }) {
                 <TextInput
                     style={styles.contactInput}
                     placeholder="{number}"
+                    onChangeText={text => newStaff.staffId = text}
                 />
 
                 <Text style={styles.fieldDescription}>Full Name:</Text>
                 <TextInput
                     style={styles.contactInput}
                     placeholder="{text}"
+                    onChangeText={text => newStaff.staffName = text}
                 />
 
                 <Text style={styles.fieldDescription}>Phone Number:</Text>
                 <TextInput
                     style={styles.contactInput}
                     placeholder="{number}"
+                    onChangeText={text => newStaff.phoneNo = text}
                 />
 
                 <Text style={styles.fieldDescription}>Department:</Text>
                 <TextInput
                     style={styles.contactInput}
                     placeholder="{text}"
+                    onChangeText={text => newStaff.department = text}
                 />
 
                 <Text style={styles.fieldDescription}>Street:</Text>
                 <TextInput
                     style={styles.contactInput}
                     placeholder="{text}"
+                    onChangeText={text => newStaff.street = text}
                 />
 
                 <Text style={styles.fieldDescription}>State:</Text>
                 <TextInput
                     style={styles.contactInput}
                     placeholder="{text}"
+                    onChangeText={text => newStaff.state = text}
                 />
 
                 <Text style={styles.fieldDescription}>ZIP Code:</Text>
                 <TextInput
                     style={styles.contactInput}
                     placeholder="{text}"
+                    onChangeText={text => newStaff.zip = text}
                 />
 
                 <Text style={styles.fieldDescription}>Country:</Text>
                 <TextInput
                     style={styles.contactInput}
                     placeholder="{text}"
+                    onChangeText={text => newStaff.country = text}
                 />
             </ScrollView>
             <View style={{ padding: 20, zIndex: 100, bottom: 20, right: 20, position: 'absolute' }}>
@@ -121,11 +164,16 @@ function NewUserScreen({ route, navigation }) {
                 style={styles.altButton}
                 underlayColor="#595959"
                 activeOpacity={1}
-                onPress={() => SaveUser()}
+                onPress={() => {
+                    if (true) {
+                        console.log(newStaff)
+                        StaffCreator()
+                    }
+                    }}
                 >
                     <Text style={styles.buttonText}>Save user</Text>
                 </TouchableHighlight>
-            </View>
+            </View>            
         </View>
     )
 }
@@ -142,23 +190,25 @@ function HeaderImage() {
     )
 }
 
-async function SaveUser() {
-    var directoryUri = StorageAccessFramework.getUriForDirectoryInRoot()
-    var testFileUri
-    console.log(directoryUri)
-    var fileContents = '{\n"staffId": 5,\n"staffName": "Mick Green",\n"phoneNo": "02 9988 1122",\n"department": 3,\n"street": "700 Bandwidth Street",\n"city": "Bufferland",\n"state": "NSW",\n"zip": "0110",\n"country": "Australia"\n}'
+function StaffCreator(staffId, staffName, phoneNo, department, street, state, zip, country) {
+    //var newStaff = {staffId:staffId, staffName:staffName, phoneNo:phoneNo, department:department, street:street, state:state, zip:zip, country:country};
+    return
+}
 
-    const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync(directoryUri);
+async function CheckJSON() {
+    //FileSystem.readAsStringAsync()
+    const value = await AsyncStorage.getItem('my-key');
+    console.log(value)
+    return
+}
 
-    if (permissions.granted) {
-        let directoryUri = permissions.directoryUri
-
-        await StorageAccessFramework.createFileAsync(directoryUri, "test", "text/plain").then(async(fileUri) => {
-            await FileSystem.writeAsStringAsync(fileUri, 'hello son hows it goign');
-            testFileUri = fileUri
-        })
-        console.log(testFileUri)  
-        console.log(await FileSystem.readAsStringAsync(testFileUri))
+async function StoreData() {
+    try {
+      const jsonValue = JSON.stringify(ROIData);
+      console.log(jsonValue)
+      await AsyncStorage.setItem('my-key', jsonValue);
+    } catch (e) {
+      // saving error
     }
 }
 
@@ -203,6 +253,7 @@ function App() {
             <Stack.Navigator>
                 <Stack.Screen name="Home" component={HomeScreen} options={
                     { headerTitle: (props) => <HeaderImage {...props} /> }} />
+                <Stack.Screen name="Directory" component={DirectoryScreen} />
                 <Stack.Screen name="Details" component={DetailsScreen} />
                 <Stack.Screen name="NewUser" component={NewUserScreen} />
             </Stack.Navigator>
