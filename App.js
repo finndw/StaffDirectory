@@ -50,7 +50,6 @@ function HomeScreen({ navigation }) {
 }
 
 function DirectoryScreen({ navigation }) {
-    console.log("Directory Screen")
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
             <ScrollView>
@@ -96,62 +95,60 @@ function DetailsScreen({ route, navigation }) {
 
     return (
         <View>
-        <ScrollView>
-            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Staff ID #:</Text>
-            <Text style={[styles.field, {fontSize: variableFontSize}]}>{staffId}</Text>
+            <ScrollView>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Staff ID #:</Text>
+                <Text style={[styles.field, {fontSize: variableFontSize}]}>{staffId}</Text>
 
-            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Phone Number:</Text>
-            <Text style={[styles.field, {fontSize: variableFontSize}]}>{phoneNo}</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Phone Number:</Text>
+                <Text style={[styles.field, {fontSize: variableFontSize}]}>{phoneNo}</Text>
 
-            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Department:</Text>
-            <Text style={[styles.field, {fontSize: variableFontSize}]}>{department}</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Department:</Text>
+                <Text style={[styles.field, {fontSize: variableFontSize}]}>{department}</Text>
 
-            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Street:</Text>
-            <Text style={[styles.field, {fontSize: variableFontSize}]}>{street}</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Street:</Text>
+                <Text style={[styles.field, {fontSize: variableFontSize}]}>{street}</Text>
 
-            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>State:</Text>
-            <Text style={[styles.field, {fontSize: variableFontSize}]}>{state}</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>State:</Text>
+                <Text style={[styles.field, {fontSize: variableFontSize}]}>{state}</Text>
 
-            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>ZIP Code:</Text>
-            <Text style={[styles.field, {fontSize: variableFontSize}]}>{zip}</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>ZIP Code:</Text>
+                <Text style={[styles.field, {fontSize: variableFontSize}]}>{zip}</Text>
 
-            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Country:</Text>
-            <Text style={[styles.field, {fontSize: variableFontSize}]}>{country}</Text>
-        </ScrollView>
-        <View style={{ padding: 20, zIndex: 100, bottom: 20, right: 20, position: 'absolute' }}>
-            <TouchableHighlight
-            style={styles.altButton}
-            underlayColor="#595959"
-            activeOpacity={1}
-            onPress={() => {navigation.navigate('Edit', { staffId, staffName, phoneNo, department, street, state, zip, country })}}
-            >
-                <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Edit user</Text>
-            </TouchableHighlight>
-        </View>
-        <View style={{ padding: 20, zIndex: 100, bottom: 20, left: 20, position: 'absolute' }}>
-            <TouchableHighlight
-            style={styles.altButton}
-            underlayColor="#595959"
-            activeOpacity={1}
-            onPress={() => {
-                var i = 0
-                while (i < ROIStaff.length) {
-                    if (ROIStaff[i].staffId == staffId && ROIStaff[i].staffName == staffName) {
-                        ROIStaff.splice(i, 1)
-                        StoreStaff()
-                        alert("User deleted")
-                        navigation.navigate('Home')
-                        return
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Country:</Text>
+                <Text style={[styles.field, {fontSize: variableFontSize}]}>{country}</Text>
+            </ScrollView>
+            <View style={{ padding: 20, zIndex: 100, bottom: 1, right: 20, position: 'absolute' }}>
+                <TouchableHighlight
+                style={styles.altButton}
+                underlayColor="#595959"
+                activeOpacity={1}
+                onPress={() => {navigation.navigate('Edit', { staffId, staffName, phoneNo, department, street, state, zip, country })}}
+                >
+                    <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Edit user</Text>
+                </TouchableHighlight>
+                <TouchableHighlight
+                style={styles.altButton}
+                underlayColor="#595959"
+                activeOpacity={1}
+                onPress={() => {
+                    var i = 0
+                    while (i < ROIStaff.length) {
+                        if (ROIStaff[i].staffId == staffId && ROIStaff[i].staffName == staffName) {
+                            ROIStaff.splice(i, 1)
+                            StoreStaff()
+                            alert("User deleted")
+                            navigation.navigate('Home')
+                            return
+                        }
+                        else {i++}
                     }
-                    else {i++}
-                }
-                
-                }}
-            >
-                <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Delete user</Text>
-            </TouchableHighlight>
-        </View>                     
-    </View>
+                    
+                    }}
+                >
+                    <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Delete user</Text>
+                </TouchableHighlight>
+            </View>                     
+        </View>
     )
 }
 
@@ -224,15 +221,12 @@ function EditUserScreen({ route, navigation }) {
             activeOpacity={1}
             onPress={() => {
                 for (item in editStaff) {
-                    console.log(item)
                     if (editStaff[item] == null) {
                         alert('Please enter values for every field.')
                         return
                     }
                 }
-                //add replace staffmember in staff array with editStaff
                 ROIStaff[editStaff.staffId - 1] = editStaff
-                console.log(ROIStaff)
                 StoreStaff()
                 alert("User edit saved")
                 navigation.navigate('Home')
@@ -246,7 +240,6 @@ function EditUserScreen({ route, navigation }) {
 }
 
 function NewUserScreen({ route, navigation }) {
-    console.log("New User")
     var newStaff = {staffId:null, staffName:null, phoneNo:null, department:null, street:null, state:null, zip:null, country:null}
     return (
         <View>
@@ -314,16 +307,15 @@ function NewUserScreen({ route, navigation }) {
                 activeOpacity={1}
                 onPress={() => {
                     for (item in newStaff) {
-                        console.log(item)
                         if (newStaff[item] === null) {
-                            alert('Please enter values for every field.')
+                            alert('Please enter values for every field')
                             return
                         }
                     }
                     //add newStaff to staff array and send to AsyncStorage
                     ROIStaff.push(newStaff)
-                    console.log(ROIStaff[ROIStaff.length - 1])
                     StoreStaff()
+                    alert('New user successfully created')
                     navigation.navigate('Home')
                     }}
                 >
@@ -339,7 +331,7 @@ function HeaderImage() {
         <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
             <Text style={styles.baseText}>Red Opal Innovations Staff Directory</Text>
             <Image
-                style={{ width: 90, height: 45 }}
+                style={{ width: 90, height: 45, left: 40 }}
                 source={require('./assets/ROILogo.jpg')}
             />
         </View>
@@ -348,7 +340,6 @@ function HeaderImage() {
 
 async function RetrieveStaff() {
     const value = await AsyncStorage.getItem('staff');
-    console.log(value)
     if (value == null) {
         ROIStaff = ROIData
     }
@@ -361,7 +352,6 @@ async function RetrieveStaff() {
 async function StoreStaff() {
     try {
       const jsonValue = JSON.stringify(ROIStaff);
-      console.log(jsonValue)
       await AsyncStorage.setItem('staff', jsonValue);
     } catch (e) {
       // saving error
@@ -372,6 +362,7 @@ async function StoreStaff() {
 const styles = StyleSheet.create({
     baseText: {
       fontFamily: 'Cochin',
+      fontWeight: 'bold'
     },
     buttonText: {
       fontWeight: 'bold',
