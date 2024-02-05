@@ -1,28 +1,48 @@
 import * as React from 'react';
-import * as FileSystem from 'expo-file-system';
-import { StorageAccessFramework } from 'expo-file-system';
 import { View, Text, TextInput, StyleSheet, TouchableHighlight, Image, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ROIData from './ROIData.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+var ROIStaff
+var variableFontSize = 20
 
 function HomeScreen({ navigation }) {
+    RetrieveStaff()
     return (
         <View>
-            <View>
+            <TouchableHighlight
+                style={styles.button}
+                underlayColor="#c64c38"
+                onPress={() => {navigation.navigate('Directory')}}>
+                <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Red Opal Innovations Staff Directory</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+                style={styles.button}
+                underlayColor="#c64c38"
+                onPress={() => {AsyncStorage.clear()}}>
+                <Text>Clear AsyncStorage</Text>
+            </TouchableHighlight>
+            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                 <TouchableHighlight
-                    style={styles.button}
+                    style={{ backgroundColor: '#941a1d', marginBottom: 20, paddingVertical: 12, paddingHorizontal: 14 }}
                     underlayColor="#c64c38"
-                    onPress={() => {navigation.navigate('Directory')}}>
-                    <Text>Directory</Text>
+                    onPress={() => {
+                        if (variableFontSize > 5) {
+                            variableFontSize -= 5
+                        }
+                        }}>
+
+                    <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Decrease text size</Text>
                 </TouchableHighlight>
+
                 <TouchableHighlight
-                    style={styles.button}
+                    style={{ backgroundColor: '#941a1d', marginBottom: 20, paddingVertical: 12, paddingHorizontal: 14 }}
                     underlayColor="#c64c38"
-                    onPress={() => {StoreData()}}>
-                    <Text>Directory</Text>
+                    onPress={() => {variableFontSize += 5}}>
+
+                    <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Increase text size</Text>
                 </TouchableHighlight>
             </View>
         </View>
@@ -30,11 +50,11 @@ function HomeScreen({ navigation }) {
 }
 
 function DirectoryScreen({ navigation }) {
+    console.log("Directory Screen")
     return (
-        
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 20 }}>
             <ScrollView>
-                {ROIData.map(staff => (
+                {ROIStaff.map(staff => (
                     <TouchableHighlight
                         style={styles.button}
                         underlayColor="#c64c38"
@@ -51,7 +71,7 @@ function DirectoryScreen({ navigation }) {
                                 country: staff.country
                             });
                         }}>
-                        <Text style={styles.buttonText}>{staff.staffName}</Text>
+                        <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>{staff.staffName}</Text>
                     </TouchableHighlight>
                 ))}
 
@@ -62,20 +82,10 @@ function DirectoryScreen({ navigation }) {
                         navigation.navigate('NewUser')
                     }}
                 >
-                    <Text style={styles.buttonText}>Add User</Text>
+                    <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Add User</Text>
                 </TouchableHighlight>
 
             </ScrollView>
-            <View style={{ padding: 20, zIndex: 100, bottom: 20, left: 20, position: 'absolute' }}>
-                <TouchableHighlight
-                style={styles.altButton}
-                underlayColor="#595959"
-                activeOpacity={1}
-                onPress={() => {CheckJSON()}}
-                >
-                    <Text style={styles.buttonText}>Hoam</Text>
-                </TouchableHighlight>
-            </View>
         </View>
 
     );
@@ -83,17 +93,155 @@ function DirectoryScreen({ navigation }) {
 
 function DetailsScreen({ route, navigation }) {
     const { staffId, staffName, phoneNo, department, street, state, zip, country } = route.params;
+
     return (
-        <View style={{ flexDirection: 'column' }}>
-            <Text>{staffId}</Text>
-            <Text>{staffName}</Text>
-            <Text>{phoneNo}</Text>
-            <Text>{department}</Text>
-            <Text>{street}</Text>
-            <Text>{state}</Text>
-            <Text>{zip}</Text>
-            <Text>{country}</Text>
+        <View>
+        <ScrollView>
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Staff ID #:</Text>
+            <Text style={[styles.field, {fontSize: variableFontSize}]}>{staffId}</Text>
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Phone Number:</Text>
+            <Text style={[styles.field, {fontSize: variableFontSize}]}>{phoneNo}</Text>
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Department:</Text>
+            <Text style={[styles.field, {fontSize: variableFontSize}]}>{department}</Text>
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Street:</Text>
+            <Text style={[styles.field, {fontSize: variableFontSize}]}>{street}</Text>
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>State:</Text>
+            <Text style={[styles.field, {fontSize: variableFontSize}]}>{state}</Text>
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>ZIP Code:</Text>
+            <Text style={[styles.field, {fontSize: variableFontSize}]}>{zip}</Text>
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Country:</Text>
+            <Text style={[styles.field, {fontSize: variableFontSize}]}>{country}</Text>
+        </ScrollView>
+        <View style={{ padding: 20, zIndex: 100, bottom: 20, right: 20, position: 'absolute' }}>
+            <TouchableHighlight
+            style={styles.altButton}
+            underlayColor="#595959"
+            activeOpacity={1}
+            onPress={() => {navigation.navigate('Edit', { staffId, staffName, phoneNo, department, street, state, zip, country })}}
+            >
+                <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Edit user</Text>
+            </TouchableHighlight>
         </View>
+        <View style={{ padding: 20, zIndex: 100, bottom: 20, left: 20, position: 'absolute' }}>
+            <TouchableHighlight
+            style={styles.altButton}
+            underlayColor="#595959"
+            activeOpacity={1}
+            onPress={() => {
+                var i = 0
+                while (i < ROIStaff.length) {
+                    if (ROIStaff[i].staffId == staffId && ROIStaff[i].staffName == staffName) {
+                        ROIStaff.splice(i, 1)
+                        StoreStaff()
+                        alert("User deleted")
+                        navigation.navigate('Home')
+                        return
+                    }
+                    else {i++}
+                }
+                
+                }}
+            >
+                <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Delete user</Text>
+            </TouchableHighlight>
+        </View>                     
+    </View>
+    )
+}
+
+function EditUserScreen({ route, navigation }) {
+    const { staffId, staffName, phoneNo, department, street, state, zip, country } = route.params;
+    var editStaff = {staffId:staffId, staffName:staffName, phoneNo:phoneNo, department:department, street:street, state:state, zip:zip, country:country}
+    return (
+        <View>
+        <ScrollView>
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Staff ID #:</Text>
+            <TextInput
+                style={[styles.contactInput, {fontSize: variableFontSize}]}
+                defaultValue={String(staffId)}
+                onChangeText={text => editStaff.staffId = text}
+            />
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Full Name:</Text>
+            <TextInput
+                style={[styles.contactInput, {fontSize: variableFontSize}]}
+                defaultValue={String(staffName)}
+                onChangeText={text => editStaff.staffName = text}
+            />
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Phone Number:</Text>
+            <TextInput
+                style={[styles.contactInput, {fontSize: variableFontSize}]}
+                defaultValue={String(phoneNo)}
+                onChangeText={text => editStaff.phoneNo = text}
+            />
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Department:</Text>
+            <TextInput
+                style={[styles.contactInput, {fontSize: variableFontSize}]}
+                defaultValue={String(department)}
+                onChangeText={text => editStaff.department = text}
+            />
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Street:</Text>
+            <TextInput
+                style={[styles.contactInput, {fontSize: variableFontSize}]}
+                defaultValue={String(street)}
+                onChangeText={text => editStaff.street = text}
+            />
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>State:</Text>
+            <TextInput
+                style={[styles.contactInput, {fontSize: variableFontSize}]}
+                defaultValue={String(state)}
+                onChangeText={text => editStaff.state = text}
+            />
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>ZIP Code:</Text>
+            <TextInput
+                style={[styles.contactInput, {fontSize: variableFontSize}]}
+                defaultValue={String(zip)}
+                onChangeText={text => editStaff.zip = text}
+            />
+
+            <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Country:</Text>
+            <TextInput
+                style={[styles.contactInput, {fontSize: variableFontSize}]}
+                defaultValue={String(country)}
+                onChangeText={text => editStaff.country = text}
+            />
+        </ScrollView>
+        <View style={{ padding: 20, zIndex: 100, bottom: 20, right: 20, position: 'absolute' }}>
+            <TouchableHighlight
+            style={styles.altButton}
+            underlayColor="#595959"
+            activeOpacity={1}
+            onPress={() => {
+                for (item in editStaff) {
+                    console.log(item)
+                    if (editStaff[item] == null) {
+                        alert('Please enter values for every field.')
+                        return
+                    }
+                }
+                //add replace staffmember in staff array with editStaff
+                ROIStaff[editStaff.staffId - 1] = editStaff
+                console.log(ROIStaff)
+                StoreStaff()
+                alert("User edit saved")
+                navigation.navigate('Home')
+                }}
+            >
+                <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Save user</Text>
+            </TouchableHighlight>
+        </View>              
+    </View>
     )
 }
 
@@ -103,58 +251,58 @@ function NewUserScreen({ route, navigation }) {
     return (
         <View>
             <ScrollView>
-                <Text style={styles.fieldDescription}>Staff ID #:</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Staff ID #:</Text>
                 <TextInput
-                    style={styles.contactInput}
+                    style={[styles.contactInput, {fontSize: variableFontSize}]}
                     placeholder="{number}"
                     onChangeText={text => newStaff.staffId = text}
                 />
 
-                <Text style={styles.fieldDescription}>Full Name:</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Full Name:</Text>
                 <TextInput
-                    style={styles.contactInput}
+                    style={[styles.contactInput, {fontSize: variableFontSize}]}
                     placeholder="{text}"
                     onChangeText={text => newStaff.staffName = text}
                 />
 
-                <Text style={styles.fieldDescription}>Phone Number:</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Phone Number:</Text>
                 <TextInput
-                    style={styles.contactInput}
+                    style={[styles.contactInput, {fontSize: variableFontSize}]}
                     placeholder="{number}"
                     onChangeText={text => newStaff.phoneNo = text}
                 />
 
-                <Text style={styles.fieldDescription}>Department:</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Department:</Text>
                 <TextInput
-                    style={styles.contactInput}
+                    style={[styles.contactInput, {fontSize: variableFontSize}]}
                     placeholder="{text}"
                     onChangeText={text => newStaff.department = text}
                 />
 
-                <Text style={styles.fieldDescription}>Street:</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Street:</Text>
                 <TextInput
-                    style={styles.contactInput}
+                    style={[styles.contactInput, {fontSize: variableFontSize}]}
                     placeholder="{text}"
                     onChangeText={text => newStaff.street = text}
                 />
 
-                <Text style={styles.fieldDescription}>State:</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>State:</Text>
                 <TextInput
-                    style={styles.contactInput}
+                    style={[styles.contactInput, {fontSize: variableFontSize}]}
                     placeholder="{text}"
                     onChangeText={text => newStaff.state = text}
                 />
 
-                <Text style={styles.fieldDescription}>ZIP Code:</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>ZIP Code:</Text>
                 <TextInput
-                    style={styles.contactInput}
+                    style={[styles.contactInput, {fontSize: variableFontSize}]}
                     placeholder="{text}"
                     onChangeText={text => newStaff.zip = text}
                 />
 
-                <Text style={styles.fieldDescription}>Country:</Text>
+                <Text style={[styles.fieldDescription, {fontSize: variableFontSize}]}>Country:</Text>
                 <TextInput
-                    style={styles.contactInput}
+                    style={[styles.contactInput, {fontSize: variableFontSize}]}
                     placeholder="{text}"
                     onChangeText={text => newStaff.country = text}
                 />
@@ -165,13 +313,21 @@ function NewUserScreen({ route, navigation }) {
                 underlayColor="#595959"
                 activeOpacity={1}
                 onPress={() => {
-                    if (true) {
-                        console.log(newStaff)
-                        StaffCreator()
+                    for (item in newStaff) {
+                        console.log(item)
+                        if (newStaff[item] === null) {
+                            alert('Please enter values for every field.')
+                            return
+                        }
                     }
+                    //add newStaff to staff array and send to AsyncStorage
+                    ROIStaff.push(newStaff)
+                    console.log(ROIStaff[ROIStaff.length - 1])
+                    StoreStaff()
+                    navigation.navigate('Home')
                     }}
                 >
-                    <Text style={styles.buttonText}>Save user</Text>
+                    <Text style={[styles.buttonText, {fontSize: variableFontSize}]}>Save user</Text>
                 </TouchableHighlight>
             </View>            
         </View>
@@ -180,44 +336,44 @@ function NewUserScreen({ route, navigation }) {
 
 function HeaderImage() {
     return (
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+            <Text style={styles.baseText}>Red Opal Innovations Staff Directory</Text>
             <Image
-                style={{ width: 80, height: 40, marginRight: 200 }}
+                style={{ width: 90, height: 45 }}
                 source={require('./assets/ROILogo.jpg')}
             />
-            <Text>ROI Staff Directory</Text>
         </View>
     )
 }
 
-function StaffCreator(staffId, staffName, phoneNo, department, street, state, zip, country) {
-    //var newStaff = {staffId:staffId, staffName:staffName, phoneNo:phoneNo, department:department, street:street, state:state, zip:zip, country:country};
-    return
-}
-
-async function CheckJSON() {
-    //FileSystem.readAsStringAsync()
-    const value = await AsyncStorage.getItem('my-key');
+async function RetrieveStaff() {
+    const value = await AsyncStorage.getItem('staff');
     console.log(value)
+    if (value == null) {
+        ROIStaff = ROIData
+    }
+    else {
+        ROIStaff = JSON.parse(value)
+    }
     return
 }
 
-async function StoreData() {
+async function StoreStaff() {
     try {
-      const jsonValue = JSON.stringify(ROIData);
+      const jsonValue = JSON.stringify(ROIStaff);
       console.log(jsonValue)
-      await AsyncStorage.setItem('my-key', jsonValue);
+      await AsyncStorage.setItem('staff', jsonValue);
     } catch (e) {
       // saving error
     }
 }
+
 
 const styles = StyleSheet.create({
     baseText: {
       fontFamily: 'Cochin',
     },
     buttonText: {
-      fontSize: 25,
       fontWeight: 'bold',
       color: 'white'
     },
@@ -229,12 +385,14 @@ const styles = StyleSheet.create({
     },
     contactInput: {
         backgroundColor: '#cb6d4f',
-        fontSize: 25,
         padding: 16
     },
     fieldDescription: {
         backgroundColor: '#c64c38',
-        fontSize: 25,
+        padding: 10
+    },
+    field: {
+        backgroundColor: '#cb6d4f',
         padding: 10
     },
     altButton: {
@@ -254,7 +412,10 @@ function App() {
                 <Stack.Screen name="Home" component={HomeScreen} options={
                     { headerTitle: (props) => <HeaderImage {...props} /> }} />
                 <Stack.Screen name="Directory" component={DirectoryScreen} />
-                <Stack.Screen name="Details" component={DetailsScreen} />
+                <Stack.Screen name="Details" component={DetailsScreen} options={
+                    ({ route }) => ({ title: route.params.staffName }) 
+                }/>
+                <Stack.Screen name="Edit" component={EditUserScreen} />
                 <Stack.Screen name="NewUser" component={NewUserScreen} />
             </Stack.Navigator>
         </NavigationContainer>
